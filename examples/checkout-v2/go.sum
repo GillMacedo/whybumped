@@ -1,0 +1,11 @@
+example.com/httpkit v1.2.0/go.mod h1:6wWFH0ezt6pqatQ7VWYuqr9KZ06SODlZ1NOc2m1ulfo=
+example.com/payclient v1.4.0/go.mod h1:1LY4DshWNQkDGoCbzMto07z+vhyWTgSOYBupzSHMKDc=
+example.com/payclient v1.5.0 h1:CoR6NXtdC2PStoQ7jxGm3a7vaJYU94Owp+Puslh6j6o=
+example.com/payclient v1.5.0/go.mod h1:n61d6hFrzvE1pFwbaAwaL305s0lRVUX/W0hl1T98B+w=
+example.com/retry v1.0.0/go.mod h1:6/yXE9Mv4uYucyTp63InEb9bK4345EuvxgcIIOXXCx0=
+example.com/retry v1.3.0/go.mod h1:YSTDjHE52gnLImhmwJaaQSk9pWAzbhdhkyhE8qHKd7k=
+example.com/telemetry v0.4.0/go.mod h1:gnkF2aeFThlsH1q+nI+1+xI2IYyQ3niOlRIeoOo7NdQ=
+example.com/telemetry v0.6.0/go.mod h1:xtxBGvKLb7BHXCZITAFQIKop2jP0k1yTNwKo8n/DAtk=
+example.com/textutil v1.0.0/go.mod h1:8ZjdAr8fvz+DF/powzA4qYWct+ElBsq2omAQBmaXDm8=
+example.com/textutil v1.1.0 h1:/GO55pnAnUIv0I4CAqHIiZLpgUyCn0mQTn9AyWOwKt0=
+example.com/textutil v1.1.0/go.mod h1:8ZjdAr8fvz+DF/powzA4qYWct+ElBsq2omAQBmaXDm8=

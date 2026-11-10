@@ -1,0 +1,13 @@
+{
+  "name": "whybumped",
+  "version": "0.1.0",
+  "description": "Explain why Go dependency versions changed between two revisions: for every module that go get, go mod tidy or a Dependabot or Renovate pull request raised, added, lowered or removed, name the dependency that required the new version and the chain back to go.mod, and list which dependencies forced the go directive up.",
+  "author": {
+    "name": "Giulliano Macedo",
+    "url": "https://github.com/GillMacedo"
+  },
+  "homepage": "https://github.com/GillMacedo/whybumped",
+  "repository": "https://github.com/GillMacedo/whybumped",
+  "license": "MIT",
+  "keywords": ["go", "golang", "go-modules", "go-mod", "dependencies", "dependabot", "renovate", "minimal-version-selection", "code-review", "go-directive"]
+}

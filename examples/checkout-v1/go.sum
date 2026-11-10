@@ -1,0 +1,5 @@
+example.com/httpkit v1.2.0/go.mod h1:6wWFH0ezt6pqatQ7VWYuqr9KZ06SODlZ1NOc2m1ulfo=
+example.com/payclient v1.4.0/go.mod h1:1LY4DshWNQkDGoCbzMto07z+vhyWTgSOYBupzSHMKDc=
+example.com/retry v1.0.0/go.mod h1:6/yXE9Mv4uYucyTp63InEb9bK4345EuvxgcIIOXXCx0=
+example.com/telemetry v0.4.0/go.mod h1:gnkF2aeFThlsH1q+nI+1+xI2IYyQ3niOlRIeoOo7NdQ=
+example.com/textutil v1.0.0/go.mod h1:8ZjdAr8fvz+DF/powzA4qYWct+ElBsq2omAQBmaXDm8=

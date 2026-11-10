@@ -1,0 +1,14 @@
+{
+  "name": "whybumped-marketplace",
+  "description": "Marketplace for whybumped, which explains why Go dependency versions and the go directive changed between two revisions of a module.",
+  "owner": {
+    "name": "Giulliano Macedo"
+  },
+  "plugins": [
+    {
+      "name": "whybumped",
+      "source": "./plugin",
+      "description": "Compare the Go module graph of two revisions and name the dependency that required each raised, added or lowered module version and the go directive bump."
+    }
+  ]
+}

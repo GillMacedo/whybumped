@@ -1,0 +1,29 @@
+[
+  {
+    "skills": ["explaining-go-dependency-bumps"],
+    "query": "This Dependabot PR bumps grpc but go.mod changed eight lines. Why did the other modules move?",
+    "expected_behavior": [
+      "Finds the merge base with git merge-base and runs whybumped with --base and the module directory",
+      "Passes the module and version from the PR title with --expect",
+      "Groups the other changes by the root module in the 'pulled in through' line and names the requirer of each",
+      "Treats exit code 2 as unknown and shows the error instead of calling it a pass"
+    ]
+  },
+  {
+    "skills": ["explaining-go-dependency-bumps"],
+    "query": "After I added a dependency, go.mod now says go 1.23 and CI on Go 1.22 broke. Which dependency did that?",
+    "expected_behavior": [
+      "Runs whybumped with --base set to the commit before the change",
+      "Reports the go-raised finding: the dependency that needs the new go version and the chain back to go.mod",
+      "Says whether go.mod went further than any dependency needs"
+    ]
+  },
+  {
+    "skills": ["explaining-go-dependency-bumps"],
+    "query": "Did my go get -u change anything that nothing needs?",
+    "expected_behavior": [
+      "Runs whybumped against the commit before the go get",
+      "Lists requested changes on // indirect modules that no dependency needs, with the highest version dependencies need"
+    ]
+  }
+]
