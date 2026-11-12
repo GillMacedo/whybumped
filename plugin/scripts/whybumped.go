@@ -784,7 +784,7 @@ func requirementLines(o, n *side) []Finding {
 		f.Chain = chainFor(n, p+"@"+nm.Version)
 		f.Detail = fmt.Sprintf("go.mod no longer lists %s %s; it is still selected at %s", p, v, nm.Version)
 		if len(f.Chain) > 1 {
-			f.Detail += " because " + f.Chain[1] + " requires it"
+			f.Detail += " because " + nodeName(f.Chain[1]) + " requires it"
 		}
 		f.Detail += "; `go mod tidy` drops a line when no package needs the module, and a go.mod that lost lines looks the same"
 		out = append(out, f)
@@ -940,7 +940,7 @@ func chainFor(s *side, node string) []string {
 			return s.isSelected(reqs[i]) && !s.isSelected(reqs[j])
 		})
 		if len(reqs) == 0 {
-			return buildChain(parent, cur)
+			return s.formatChain(buildChain(parent, cur))
 		}
 		for _, r := range reqs {
 			if _, ok := parent[r]; !ok {
@@ -949,7 +949,42 @@ func chainFor(s *side, node string) []string {
 			}
 		}
 	}
-	return buildChain(parent, last)
+	return s.formatChain(buildChain(parent, last))
+}
+
+// chainEntry renders one chain node and, when the selected module is replaced,
+// where it really comes from: example.com/lib@v0.0.0 => ../lib.
+func (s *side) chainEntry(node string) string {
+	p, _, _ := strings.Cut(node, "@")
+	m, ok := s.Selected[p]
+	if !ok || m.Replace == nil {
+		return node
+	}
+	target := m.Replace.Path
+	if m.Replace.Version != "" {
+		target += "@" + m.Replace.Version
+	}
+	if target == "" {
+		return node
+	}
+	return node + " => " + target
+}
+
+func (s *side) formatChain(nodes []string) []string {
+	out := make([]string, len(nodes))
+	for i, n := range nodes {
+		out[i] = s.chainEntry(n)
+	}
+	return out
+}
+
+// nodeName drops the replace suffix from a chain entry, for prose that names
+// the module rather than describing where it comes from.
+func nodeName(entry string) string {
+	if i := strings.Index(entry, " => "); i >= 0 {
+		return entry[:i]
+	}
+	return entry
 }
 
 func buildChain(parent map[string]string, end string) []string {
@@ -1025,7 +1060,7 @@ func explainUp(n *side, path, oldV string, nm module, change string) Finding {
 	if change == "added" {
 		verb = "added at " + nm.Version
 	}
-	f.Detail = fmt.Sprintf("%s because %s requires it", verb, f.Chain[1])
+	f.Detail = fmt.Sprintf("%s because %s requires it", verb, nodeName(f.Chain[1]))
 	if !n.isSelected(f.Chain[1]) {
 		rp, _, _ := strings.Cut(f.Chain[1], "@")
 		f.Detail += fmt.Sprintf(" (that version of %s isn't selected, %s is, but its requirements still count)", rp, n.Selected[rp].Version)
