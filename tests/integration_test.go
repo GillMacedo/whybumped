@@ -160,6 +160,15 @@ func mustContain(t *testing.T, out string, want ...string) {
 	}
 }
 
+func mustNotContain(t *testing.T, out string, unwanted ...string) {
+	t.Helper()
+	for _, w := range unwanted {
+		if strings.Contains(out, w) {
+			t.Errorf("output has %q:\n%s", w, out)
+		}
+	}
+}
+
 func TestExampleBump(t *testing.T) {
 	r := runTool(t, "--old", example(t, "checkout-v1"), "--new", example(t, "checkout-v2"))
 	if r.code != 1 {
@@ -619,6 +628,11 @@ func TestBaseLocalReplace(t *testing.T) {
 		"via example.com/lib@v0.0.0 => ../lib <- go.mod",
 		"pulled in through: example.com/lib@v0.0.0 => ../lib (2)",
 	)
+	// The replace suffix must stay out of prose that names the module: the
+	// selected version check and the "also required by" list both compare
+	// against plain path@version nodes, so leaking the suffix into either
+	// prints a false "isn't selected" note or repeats the first requirer.
+	mustNotContain(t, r.stdout, "isn't selected", "also required by")
 	// The same replacement has to reach the JSON output, not only the text.
 	j := runTool(t, "--base", "HEAD", "--new", svc, "--format", "json")
 	if j.code != 1 {

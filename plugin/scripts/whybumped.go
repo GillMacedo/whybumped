@@ -1045,7 +1045,7 @@ func explainUp(n *side, path, oldV string, nm module, change string) Finding {
 	f.Cause = "pulled"
 	f.Chain = chainFor(n, node)
 	if len(f.Chain) > 1 {
-		first := f.Chain[1]
+		first := nodeName(f.Chain[1])
 		for _, r := range reqs {
 			if r != first {
 				if len(f.Others) == 5 {
@@ -1061,8 +1061,8 @@ func explainUp(n *side, path, oldV string, nm module, change string) Finding {
 		verb = "added at " + nm.Version
 	}
 	f.Detail = fmt.Sprintf("%s because %s requires it", verb, nodeName(f.Chain[1]))
-	if !n.isSelected(f.Chain[1]) {
-		rp, _, _ := strings.Cut(f.Chain[1], "@")
+	if !n.isSelected(nodeName(f.Chain[1])) {
+		rp, _, _ := strings.Cut(nodeName(f.Chain[1]), "@")
 		f.Detail += fmt.Sprintf(" (that version of %s isn't selected, %s is, but its requirements still count)", rp, n.Selected[rp].Version)
 	}
 	return f
@@ -1090,7 +1090,7 @@ func explainDown(o, n *side, path, oldV, newV string) Finding {
 		}
 	}
 	f.Others = gone
-	f.Detail = fmt.Sprintf("lowered from %s to %s; %s required %s before", oldV, newV, f.Chain[1], oldV)
+	f.Detail = fmt.Sprintf("lowered from %s to %s; %s required %s before", oldV, newV, nodeName(f.Chain[1]), oldV)
 	return f
 }
 
@@ -1107,7 +1107,7 @@ func explainRemoved(o *side, path, oldV string) Finding {
 	}
 	f.Cause = "released"
 	f.Chain = chainFor(o, path+"@"+oldV)
-	f.Detail = fmt.Sprintf("no longer required; %s required it before", f.Chain[1])
+	f.Detail = fmt.Sprintf("no longer required; %s required it before", nodeName(f.Chain[1]))
 	return f
 }
 
