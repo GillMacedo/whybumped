@@ -955,9 +955,9 @@ func chainFor(s *side, node string) []string {
 // chainEntry renders one chain node and, when the selected module is replaced,
 // where it really comes from: example.com/lib@v0.0.0 => ../lib.
 func (s *side) chainEntry(node string) string {
-	p, _, _ := strings.Cut(node, "@")
+	p, version, _ := strings.Cut(node, "@")
 	m, ok := s.Selected[p]
-	if !ok || m.Replace == nil {
+	if !ok || m.Replace == nil || m.Version != version {
 		return node
 	}
 	target := m.Replace.Path
