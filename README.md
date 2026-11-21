@@ -143,7 +143,7 @@ I searched GitHub and the web for a tool that explains each version change betwe
 - **It explains requirements, not imports.** A module in the build list may provide no package your code uses; `go mod why -m` answers that.
 - **The chain is one of possibly several.** It prefers selected versions and the shortest path, and lists up to five other requirers of the same version.
 - **It doesn't judge the new versions.** Whether v1.3.0 is safe is for tests, changelogs and `govulncheck`.
-- **Replaced modules** are shown with the version go.mod requires, not the replacement.
+- **Replaced modules** are shown with the version go.mod requires, and where they really come from (for example `example.com/lib@v0.0.0 => ../lib`).
 
 ## FAQ
 

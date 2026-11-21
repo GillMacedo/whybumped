@@ -160,6 +160,15 @@ func mustContain(t *testing.T, out string, want ...string) {
 	}
 }
 
+func mustNotContain(t *testing.T, out string, unwanted ...string) {
+	t.Helper()
+	for _, w := range unwanted {
+		if strings.Contains(out, w) {
+			t.Errorf("output has %q:\n%s", w, out)
+		}
+	}
+}
+
 func TestExampleBump(t *testing.T) {
 	r := runTool(t, "--old", example(t, "checkout-v1"), "--new", example(t, "checkout-v2"))
 	if r.code != 1 {
@@ -616,8 +625,44 @@ func TestBaseLocalReplace(t *testing.T) {
 	}
 	mustContain(t, r.stdout,
 		"WARN  raised example.com/retry v1.0.0 -> v1.3.0\n        raised to v1.3.0 because example.com/lib@v0.0.0 requires it",
-		"pulled in through: example.com/lib@v0.0.0 (2)",
+		"via example.com/lib@v0.0.0 => ../lib <- go.mod",
+		"pulled in through: example.com/lib@v0.0.0 => ../lib (2)",
 	)
+	// The replace suffix must stay out of prose that names the module: the
+	// selected version check and the "also required by" list both compare
+	// against plain path@version nodes, so leaking the suffix into either
+	// prints a false "isn't selected" note or repeats the first requirer.
+	mustNotContain(t, r.stdout, "isn't selected", "also required by")
+	// The same replacement has to reach the JSON output, not only the text.
+	j := runTool(t, "--base", "HEAD", "--new", svc, "--format", "json")
+	if j.code != 1 {
+		t.Fatalf("json exit %d\n%s%s", j.code, j.stdout, j.stderr)
+	}
+	var rep struct {
+		Findings []struct {
+			Chain []string
+		}
+		Roots []struct {
+			Node string
+		}
+	}
+	if err := json.Unmarshal([]byte(j.stdout), &rep); err != nil {
+		t.Fatalf("json: %v\n%s", err, j.stdout)
+	}
+	found := false
+	for _, f := range rep.Findings {
+		for _, c := range f.Chain {
+			if c == "example.com/lib@v0.0.0 => ../lib" {
+				found = true
+			}
+		}
+	}
+	if !found {
+		t.Errorf("json chains carry no replacement: %+v", rep.Findings)
+	}
+	if len(rep.Roots) != 1 || rep.Roots[0].Node != "example.com/lib@v0.0.0 => ../lib" {
+		t.Errorf("json roots: %+v", rep.Roots)
+	}
 }
 
 func TestGoLineRespelled(t *testing.T) {
