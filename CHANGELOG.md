@@ -4,6 +4,11 @@ All notable changes are documented here, in [Keep a Changelog](https://keepachan
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-11-21
+
+### Added
+- Show replace directives in chain output (#1) (#6)
+
 ## [0.1.0] - 2026-11-10
 
 ### Added
